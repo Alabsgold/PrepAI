@@ -27,3 +27,7 @@ class UserService:
         self.session.refresh(db_user)
 
         return db_user
+
+    def get_user_by_username(self, username: str) -> User | None:
+        statement = select(User).where(User.username == username)
+        return self.session.exec(statement).first()
