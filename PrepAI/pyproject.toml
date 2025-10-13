@@ -1,0 +1,32 @@
+[project]
+name = "prepai"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "google-labs-jules[bot]",email = "161369871+google-labs-jules[bot]@users.noreply.github.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi (>=0.119.0,<0.120.0)",
+    "uvicorn[standard] (>=0.37.0,<0.38.0)",
+    "sqlmodel (>=0.0.27,<0.0.28)",
+    "psycopg2-binary (>=2.9.11,<3.0.0)",
+    "passlib[bcrypt] (==1.7.4)",
+    "bcrypt (==4.3.0)",
+    "python-dotenv (>=1.1.1,<2.0.0)",
+    "python-jose[cryptography] (>=3.5.0,<4.0.0)",
+    "pydantic-settings (>=2.11.0,<3.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.2"
+httpx = "^0.28.1"
+
+[tool.pytest.ini_options]
+pythonpath = "."
