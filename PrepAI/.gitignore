@@ -7,3 +7,6 @@ __pycache__/
 
 # Test database
 test.db
+
+# Media files
+media/

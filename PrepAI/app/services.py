@@ -1,10 +1,13 @@
-from fastapi import Depends, HTTPException
+import uuid
+from pathlib import Path
+from fastapi import Depends, HTTPException, UploadFile
 from sqlmodel import Session, select
 from passlib.context import CryptContext
 
 from .database import get_session
-from .models import User
+from .models import User, SourceDocument
 from .schemas import UserCreate
+from .tasks import process_document_task
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -31,3 +34,32 @@ class UserService:
     def get_user_by_username(self, username: str) -> User | None:
         statement = select(User).where(User.username == username)
         return self.session.exec(statement).first()
+
+
+class DocumentService:
+    def __init__(self, session: Session = Depends(get_session)):
+        self.session = session
+
+    async def create_upload_document(self, file: UploadFile, current_user: User) -> SourceDocument:
+        upload_dir = Path("media/uploads")
+        upload_dir.mkdir(parents=True, exist_ok=True)
+
+        sanitized_filename = f"{uuid.uuid4()}_{file.filename}"
+        file_path = upload_dir / sanitized_filename
+
+        with open(file_path, "wb") as buffer:
+            buffer.write(await file.read())
+
+        db_document = SourceDocument(
+            original_filename=file.filename,
+            file_path=str(file_path),
+            status="PENDING",
+            owner_id=current_user.id,
+        )
+        self.session.add(db_document)
+        self.session.commit()
+        self.session.refresh(db_document)
+
+        process_document_task.delay(db_document.id)
+
+        return db_document

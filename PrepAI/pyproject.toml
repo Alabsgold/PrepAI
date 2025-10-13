@@ -17,7 +17,9 @@ dependencies = [
     "python-dotenv (>=1.1.1,<2.0.0)",
     "python-jose[cryptography] (>=3.5.0,<4.0.0)",
     "pydantic-settings (>=2.11.0,<3.0.0)",
-    "python-multipart (>=0.0.20,<0.0.21)"
+    "python-multipart (>=0.0.20,<0.0.21)",
+    "celery (>=5.5.3,<6.0.0)",
+    "redis (>=6.4.0,<7.0.0)"
 ]
 
 
