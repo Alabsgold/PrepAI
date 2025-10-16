@@ -37,15 +37,16 @@ def authenticated_user_token():
     return response.json()["access_token"]
 
 
-@patch("app.services.process_document_task.delay")
+@patch("app.tasks.process_document_task.delay")
 def test_upload_document(mock_delay, authenticated_user_token):
     headers = {"Authorization": f"Bearer {authenticated_user_token}"}
-    files = {"file": ("test.txt", b"test content", "text/plain")}
+    files = {"file": ("test.pdf", b"test content", "application/pdf")}
+
     response = client.post("/documents/upload", headers=headers, files=files)
 
     assert response.status_code == 200
     data = response.json()
-    assert data["original_filename"] == "test.txt"
+    assert data["original_filename"] == "test.pdf"
     assert data["status"] == "PENDING"
     assert "id" in data
 

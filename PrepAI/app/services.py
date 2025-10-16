@@ -1,4 +1,5 @@
 import uuid
+import fitz  # PyMuPDF
 from pathlib import Path
 from fastapi import Depends, HTTPException, UploadFile
 from sqlmodel import Session, select
@@ -7,7 +8,6 @@ from passlib.context import CryptContext
 from .database import get_session
 from .models import User, SourceDocument
 from .schemas import UserCreate
-from .tasks import process_document_task
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -60,6 +60,15 @@ class DocumentService:
         self.session.commit()
         self.session.refresh(db_document)
 
+        from .tasks import process_document_task
         process_document_task.delay(db_document.id)
 
         return db_document
+
+    def extract_text_from_document(self, file_path: str) -> str:
+        doc = fitz.open(file_path)
+        text = ""
+        for page in doc:
+            text += page.get_text()
+        doc.close()
+        return text

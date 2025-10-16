@@ -19,7 +19,9 @@ dependencies = [
     "pydantic-settings (>=2.11.0,<3.0.0)",
     "python-multipart (>=0.0.20,<0.0.21)",
     "celery (>=5.5.3,<6.0.0)",
-    "redis (>=6.4.0,<7.0.0)"
+    "redis (>=6.4.0,<7.0.0)",
+    "pymupdf (>=1.26.5,<2.0.0)",
+    "openai (>=2.3.0,<3.0.0)"
 ]
 
 
