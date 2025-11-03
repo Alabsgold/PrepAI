@@ -1,0 +1,12 @@
+# Environment variables
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Test database
+test.db
+
+# Media files
+media/
