@@ -91,8 +91,8 @@ class DocumentService:
             select(GeneratedQuiz)
             .where(GeneratedQuiz.source_document_id == document.id)
             .options(
-                selectinload(GeneratedQuiz.generated_questions)
-                .selectinload(GeneratedQuestion.generated_options)
+                selectinload(GeneratedQuiz.questions)
+                .selectinload(GeneratedQuestion.options)
             )
         )
         quiz = self.session.exec(statement).unique().first()
